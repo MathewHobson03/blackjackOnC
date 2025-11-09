@@ -1,11 +1,17 @@
 #include "../include/game_logic.h"
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
-#include "game_logic.h"
+#include <stdio.h>
+#include <stdbool.h>
+
 
 //Some base definitions
 #define DECK_SIZE 52
 #define BLACKJACK 21
+
+static const char *suit_names[] = { "Hearts", "Clubs", "Diamonds", "Spades" };
+static const char *rank_names[] = { "?", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
 
 // Global variables
 int nextCardIndex = 0;
@@ -23,30 +29,27 @@ void swap(Card* a, Card* b){
     *b=temp;
 }
 void shuffleCards(Card deck[52]){
-    srand (time(NULL));
-    for(int i=DECK_SIZE; i>0;i--){
-        int swap_index = rand()%DECK_SIZE;
-        for (int i = DECK_SIZE-1; i > 0; i--){
-        // Pick a random index from 0 to i
-        int j = rand() % (i+1);
-
-        // Swap arr[i] with the element at random index
+    /* Fisher–Yates shuffle */
+    srand((unsigned)time(NULL));
+    for (int i = DECK_SIZE - 1; i > 0; --i) {
+        int j = rand() % (i + 1);
         swap(&deck[i], &deck[j]);
-        }
-
     }
 }
 
 void playerHit(Card deck[52]){
     playerHand[playerHandSize] = cardDraw(deck, &nextCardIndex);
+    playerScore = playerScore + playerHand[playerHandSize].rank;
     playerHandSize++;
 }
 void dealerHit(Card deck[52]){
     dealerHand[dealerHandSize] = cardDraw(deck, &nextCardIndex);
+    dealerScore = dealerScore + dealerHand[dealerHandSize].rank;
     dealerHandSize++;
 }
 void playerStand()
 {
+    
 }
 void dealerBust()
 {
@@ -54,28 +57,55 @@ void dealerBust()
 void playerBust()
 {
 }
-C int getPlayerScore()
+void printPlayerCard(){
+    for (int i = 0; i < playerHandSize; ++i) {
+        int r = (int)playerHand[i].rank;
+        int s = (int)playerHand[i].suite;
+        if (r < 1 || r > 13) {
+            printf("Invalid rank at hand index %d\n", i);
+            continue;
+        }
+        if (s < 0 || s >= 4) {
+            printf("Invalid suit at hand index %d\n", i);
+            continue;
+        }
+        printf("%s of %s\n", rank_names[r], suit_names[s]);
+    }
+}
+int getPlayerScore()
 {
-    return 0;
+    return playerScore;
 }
 int getDealerScore()
 {
-    return 0;
+    return dealerScore;
 }
 int compareScores()
 {
-    if(playerScore == dealerScore){
-        return 2;
+    // Handle busts first
+    if (playerScore > BLACKJACK && dealerScore > BLACKJACK) {
+        // both busted -> dealer wins by house rule (could be tie)
+        return 0;
     }
-    else if((playerScore>dealerScore)&& playerScore <= 21){
-        return 1;
+    if (playerScore > BLACKJACK) {
+        return 0; // player busted -> dealer wins
     }
-    else{
-        return 0;   
+    if (dealerScore > BLACKJACK) {
+        return 1; // dealer busted -> player wins
+    }
+
+    if (playerScore == dealerScore) {
+        return 2; // tie
+    }
+    else if ((playerScore > dealerScore) && playerScore <= BLACKJACK) {
+        return 1; // player wins
+    }
+    else {
+        return 0; // dealer wins
     }
     
 }
-ard cardDraw(Card deck[52], int *nextCardIndex)
+Card cardDraw(Card deck[52], int *nextCardIndex)
 {
     return deck[(*nextCardIndex)++];
 }
@@ -85,13 +115,42 @@ void dealInitialCards(Card deck[52]){
     dealerHit(deck);
     dealerHit(deck);
 }
-void initGame(Card deck[52], int* playerScore, int* dealerScore){
-    
-    int a=4;
-    int b=14;
-    int z=0;
-    *dealerScore =0;
-    *playerScore =0;
+
+void printDealerCard(){
+    for (int i = 0; i < dealerHandSize; ++i) {
+        int r = (int)dealerHand[i].rank;
+        int s = (int)dealerHand[i].suite;
+        if (r < 1 || r > 13) {
+            printf("Invalid rank at dealer hand index %d\n", i);
+            continue;
+        }
+        if (s < 0 || s >= 4) {
+            printf("Invalid suit at dealer hand index %d\n", i);
+            continue;
+        }
+        printf("%s of %s\n", rank_names[r], suit_names[s]);
+    }
+}
+
+// Simple dealer AI: hit until reaching 17 or higher.
+void dealerPlay(Card deck[52]){
+    while (dealerScore < 17) {
+        dealerHit(deck);
+    }
+}
+void initGame(Card deck[52], int* playerScoreOut, int* dealerScoreOut){
+    int a = 4;
+    int b = 14;
+    int z = 0;
+    /* Initialize global state */
+    nextCardIndex = 0;
+    playerScore = 0;
+    dealerScore = 0;
+    playerHandSize = 0;
+    dealerHandSize = 0;
+
+    if (playerScoreOut) *playerScoreOut = 0;
+    if (dealerScoreOut) *dealerScoreOut = 0;
     for(int i=0;i<a;i++){
         for(int k=1;k<b;k++){
             deck[z].rank=k;
