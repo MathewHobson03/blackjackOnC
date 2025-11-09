@@ -68,6 +68,8 @@ void initGame(Card deck[52], int* playerScore, int* dealerScore){
             z++;
         }
     }
+    shuffleCards(deck);
+    dealInitialCards(deck);
 
 }
 
