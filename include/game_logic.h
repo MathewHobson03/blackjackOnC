@@ -18,8 +18,8 @@ void initGame(Card deck[52],int*,int*); //Sets up a Deck, scores, and state Vari
 void dealInitialCards(Card deck[52]); //Deals two cards to the player and to the dealer
 Card cardDraw(Card deck[52], int*); //Draws a card from the deck //?Done
 void shuffleCards(Card deck[52]); //Takes in a deck and shuffles the order, may not need if we just pick a random num from the deck, once taken set to zero, if zero it has already been chose pick again //?Done
-void playerHit(Card deck[52]); //Draws a card and deals it to the player, adding to his total
-void dealerHit(Card deck[52]);//Draws a card and deals it to the dealer, adding it to their total
+void playerHit(Card deck[52]); //Draws a card and deals it to the player, adding to his total //Done
+void dealerHit(Card deck[52]);//Draws a card and deals it to the dealer, adding it to their total //Done
 void playerStand();// Ends the turn of the player
 void dealerBust();// Check total of dealer, if over 21 they lose
 void playerBust();// Check total of player, if over 21 they lose

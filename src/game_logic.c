@@ -1,6 +1,7 @@
 #include "../include/game_logic.h"
 #include <stdlib.h>
 #include <time.h>
+#include "game_logic.h"
 
 //Some base definitions
 #define DECK_SIZE 52
@@ -44,7 +45,38 @@ void dealerHit(Card deck[52]){
     dealerHand[dealerHandSize] = cardDraw(deck, &nextCardIndex);
     dealerHandSize++;
 }
-Card cardDraw(Card deck[52], int* nextCardIndex){
+void playerStand()
+{
+}
+void dealerBust()
+{
+}
+void playerBust()
+{
+}
+C int getPlayerScore()
+{
+    return 0;
+}
+int getDealerScore()
+{
+    return 0;
+}
+int compareScores()
+{
+    if(playerScore == dealerScore){
+        return 2;
+    }
+    else if((playerScore>dealerScore)&& playerScore <= 21){
+        return 1;
+    }
+    else{
+        return 0;   
+    }
+    
+}
+ard cardDraw(Card deck[52], int *nextCardIndex)
+{
     return deck[(*nextCardIndex)++];
 }
 void dealInitialCards(Card deck[52]){
