@@ -1,6 +1,7 @@
 #include "../include/game_logic.h"
 #include <stdlib.h>
 #include <time.h>
+
 //Some base definitions
 #define DECK_SIZE 52
 #define BLACKJACK 21
@@ -35,15 +36,22 @@ void shuffleCards(Card deck[52]){
     }
 }
 
-
+void playerHit(Card deck[52]){
+    playerHand[playerHandSize] = cardDraw(deck, &nextCardIndex);
+    playerHandSize++;
+}
+void dealerHit(Card deck[52]){
+    dealerHand[dealerHandSize] = cardDraw(deck, &nextCardIndex);
+    dealerHandSize++;
+}
 Card cardDraw(Card deck[52], int* nextCardIndex){
     return deck[(*nextCardIndex)++];
 }
 void dealInitialCards(Card deck[52]){
-    playerHand[playerHandSize]=cardDraw(deck, &nextCardIndex);
-    playerHand[playerHandSize]=cardDraw(deck, &nextCardIndex);
-    dealerHand[dealerHandSize]=cardDraw(deck, &nextCardIndex);
-    dealerHand[dealerHandSize]=cardDraw(deck, &nextCardIndex);
+    playerHit(deck);
+    playerHit(deck);
+    dealerHit(deck);
+    dealerHit(deck);
 }
 void initGame(Card deck[52], int* playerScore, int* dealerScore){
     
@@ -64,13 +72,3 @@ void initGame(Card deck[52], int* playerScore, int* dealerScore){
 }
 
 
-
-int main(){
-    Card deck[52];
-    int playerScore;
-    int dealerScore;
-    initGame(deck,&playerScore, &dealerScore);
-    shuffleCards(deck);
-    printf("%d\n%d", deck[51].rank,deck[51].suite);
-    return 0;
-}

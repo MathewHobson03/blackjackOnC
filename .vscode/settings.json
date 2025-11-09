@@ -3,5 +3,6 @@
         "game_logic.h": "c",
         "stdlib.h": "c",
         "type_traits": "c"
-    }
+    },
+    "makefile.configureOnOpen": false
 }
