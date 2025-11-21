@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include "../includes/peripherals/lcd.h"
 #pragma once 
 
 enum CardRank {Ace = 1,Two , Three, Four, Five, Six,
@@ -28,10 +29,10 @@ int getDealerScore();// Getter for dealer score
 int compareScores();// Comparator for dealer and player score
 
 // Dealer logic: run the dealer's turn (hits until reaching 17 or higher)
-void dealerPlay(Card deck[52]);
+void dealerPlay(Card deck[52],lcd_handle_t* lcd);
 
 // Print dealer's hand to stdout (for debugging/console output)
-void printDealerCard();
+void printDealerCard(lcd_handle_t* lcd);
 
 void resetGame(); // Re Initializes game
 

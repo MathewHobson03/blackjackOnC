@@ -32,5 +32,5 @@ int lcd_clear(lcd_handle_t *lcd);
 int lcd_write_text(lcd_handle_t *lcd, int x, int y, const char *text);
 int lcd_backlight(lcd_handle_t *lcd, bool on);
 int lcd_refresh(lcd_handle_t *lcd);
-
+int lcd_write_score(lcd_handle_t *lcd, int x, int y, const int num);
 #endif

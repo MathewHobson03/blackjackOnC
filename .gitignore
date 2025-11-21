@@ -1,0 +1,10 @@
+
+# Build directories and object files
+build/
+obj/
+*.obj
+
+# Visual Studio and VS Code settings
+.vs/
+.vscode/
+

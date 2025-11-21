@@ -1,10 +1,11 @@
-#include "../include/game_logic.h"
+#include "../includes/game_logic.h"
+#include "unistd.h"
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdbool.h>
-
+#include "../includes/peripherals/lcd.h"
 
 //Some base definitions
 #define DECK_SIZE 52
@@ -57,7 +58,9 @@ void dealerBust()
 void playerBust()
 {
 }
-void printPlayerCard(){
+void printPlayerCard(lcd_handle_t* lcd){
+	int line =0;
+	lcd_clear(lcd);
     for (int i = 0; i < playerHandSize; ++i) {
         int r = (int)playerHand[i].rank;
         int s = (int)playerHand[i].suite;
@@ -69,7 +72,10 @@ void printPlayerCard(){
             printf("Invalid suit at hand index %d\n", i);
             continue;
         }
+        lcd_write_text(lcd, 0,line,rank_names[r]);
+        lcd_write_text(lcd,40,line,suit_names[s]);
         printf("%s of %s\n", rank_names[r], suit_names[s]);
+        line = line+10;
     }
 }
 int getPlayerScore()
@@ -116,10 +122,14 @@ void dealInitialCards(Card deck[52]){
     dealerHit(deck);
 }
 
-void printDealerCard(){
+void printDealerCard(lcd_handle_t* lcd){
+	int line = 0;
+	lcd_clear(lcd);
     for (int i = 0; i < dealerHandSize; ++i) {
         int r = (int)dealerHand[i].rank;
         int s = (int)dealerHand[i].suite;
+	
+	
         if (r < 1 || r > 13) {
             printf("Invalid rank at dealer hand index %d\n", i);
             continue;
@@ -128,15 +138,24 @@ void printDealerCard(){
             printf("Invalid suit at dealer hand index %d\n", i);
             continue;
         }
+	lcd_write_text(lcd, 0,line,rank_names[r]);
+	lcd_write_text(lcd,40,line,suit_names[s]);
         printf("%s of %s\n", rank_names[r], suit_names[s]);
+	line =line+10;
     }
 }
 
 // Simple dealer AI: hit until reaching 17 or higher.
-void dealerPlay(Card deck[52]){
+void dealerPlay(Card deck[52],lcd_handle_t* lcd){
+	int line = 0;
     while (dealerScore < 17) {
+	lcd_write_text(lcd,0,line,"Dealer hits again");
         dealerHit(deck);
+	sleep(3);
+	line = line +20;
+	
     }
+	lcd_clear(lcd);
 }
 void initGame(Card deck[52], int* playerScoreOut, int* dealerScoreOut){
     int a = 4;

@@ -1,4 +1,4 @@
-#include "peripherals/lcd.h"
+#include "../includes/peripherals/lcd.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -124,6 +124,14 @@ int lcd_write_text(lcd_handle_t *lcd, int x, int y, const char *text) {
     return 0;
 }
 
+int lcd_write_score(lcd_handle_t* lcd, int x, int y, const int num) {
+    if (!lcd || !lcd->initialized || !num) return -1;
+    char buff[16];
+    snprintf(buff, sizeof(buff), "%d", num);   // dereference pointer and avoid overflow
+    DRAW_PrintString(&lcd->canvas, x, y, buff, LCD_BLACK, &font_16x16);
+    DRAW_Refresh(&lcd->canvas);
+    return 0;
+}
 int lcd_backlight(lcd_handle_t *lcd, bool on) {
     if (!lcd || !lcd->initialized) return -1;
     
@@ -139,4 +147,3 @@ int lcd_refresh(lcd_handle_t *lcd) {
     
     return 0;
 }
-    

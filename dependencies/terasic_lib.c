@@ -1,6 +1,6 @@
 #include "terasic_os_includes.h"
 #include "terasic_lib.h"
-
+#define _POSIX_C_SOURCE 199309L
 
 // link: -lrt
 
